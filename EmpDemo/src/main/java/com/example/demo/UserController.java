@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,7 +19,7 @@ import com.example.demo.dto.UserDto;
 import com.example.demo.service.LoginService;
 
 @Controller
-public class LoginController {  // 
+public class UserController {  // 
 	
 	
 	@InitBinder
@@ -34,38 +35,70 @@ public class LoginController {  //
 	private LoginService loginService;
 	
 	
-	@RequestMapping(value = "/login")
-	public String goToLoginPage() {
-		
-		
-		
-		return "login.jsp";
-	}
 	
 	
 	
-	@RequestMapping(value = "/doLogin",method = RequestMethod.POST)
-	public String doLogin(Model model,@RequestParam("username") String username,@RequestParam("password") String password) {
+	@RequestMapping(value = "/processUser",method = RequestMethod.POST)
+	public String processUser(Model model,@ModelAttribute("user") UserDto userDto) {
 		
 		
-		UserDto userDto = loginService.getUserByUsernameAndPassword(username, password);
-		
-		if(userDto != null) {
-			
-			UserDto user = new UserDto();
-			
-			List<UserDto> userList = loginService.getUserList();
-			
-			model.addAttribute("user", user);
-			
-			model.addAttribute("userList", userList);
-			
-			return "dashboard.jsp";
-		}else {
-			return "login.jsp";
+		if(userDto.getId() == null) {
+			loginService.saveUser(userDto);
+		}else{
+			loginService.updateUser(userDto);
 		}
 		
 		
+		
+		
+		UserDto user = new UserDto();
+		
+		List<UserDto> userList = loginService.getUserList();
+		
+		model.addAttribute("user", user);
+		
+		model.addAttribute("userList", userList);
+		
+		return "dashboard.jsp";
+	
+		
+		
 	}
+	
+	
+	
+	
+	
+	@RequestMapping(value = "/editUser",method = RequestMethod.GET)
+	public String processUser(Model model,@RequestParam("id") Integer id) {
+		
+		
+		//	
+		
+		
+		
+		
+		UserDto user = loginService.findUserById(id);
+		
+		List<UserDto> userList = loginService.getUserList();
+		
+		model.addAttribute("user", user);
+		
+		model.addAttribute("userList", userList);
+		
+		return "dashboard.jsp";
+	
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

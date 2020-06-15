@@ -2,6 +2,7 @@ package com.example.demo.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -42,6 +43,36 @@ public class UserDao {
 	        return user;
 
 	    }
+	}
+
+
+	public void save(UserDto userDto){
+		String sql = "INSERT INTO user(name,phone_no,dob,username,password) values(?, ?, ?,?,?)";
+
+			
+		jdbcTemplate.update(sql, new Object[] { userDto.getName(),userDto.getPhoneNo(),userDto.getDob(),userDto.getUsername(),userDto.getPassword() });
+	}
+
+
+	public List<UserDto> findAll() {
+		String sql = "SELECT * FROM user";
+
+        return jdbcTemplate.query(sql,new UserRowMapper());
+	}
+
+
+	public UserDto findUserById(Integer id) {
+		String sql = "SELECT * FROM user WHERE id=?";
+
+        return jdbcTemplate.queryForObject(sql, new Object[]{id}, new UserRowMapper());
+	}
+
+
+	public void update(UserDto userDto) {
+		String sql = "update user set name=?,phone_no=?,dob=?,username=?,password=? where id=?";
+
+		
+		jdbcTemplate.update(sql, new Object[] { userDto.getName(),userDto.getPhoneNo(),userDto.getDob(),userDto.getUsername(),userDto.getPassword(),userDto.getId() });
 	}
 	
 

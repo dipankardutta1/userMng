@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,49 @@ public class LoginService {
 		
 		
 		
+	}
+
+
+	public void saveUser(UserDto userDto) {
+		try {
+			userDao.save(userDto);
+		
+		}catch(Exception e) {
+			
+		}
+		
+	}
+
+
+	public List<UserDto> getUserList() {
+		try {
+			return userDao.findAll();
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
+	public UserDto findUserById(Integer id) {
+		try {
+			return userDao.findUserById(id);
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
+	public void updateUser(UserDto userDto) {
+		try {
+			userDao.update(userDto);
+		
+		}catch(Exception e) {
+			
+		}	
 	}
 
 }
